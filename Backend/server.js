@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const config = require('./src/config/config.js');
-
+const dotenv = require('dotenv');
+dotenv.config();
 // Import routes
 const authRoutes = require('./src/routes/auth');
 const foodItemRoutes = require('./src/routes/foodItems');

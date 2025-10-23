@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import './Login.css'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -76,51 +75,63 @@ const Login = () => {
   }
 
   return (
-    <div className="login">
-      <div className="login-container">
-        <div className="login-content">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center py-8 px-4">
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="p-8">
           {/* Logo Section */}
-          <div className="login-logo">
-            <div className="logo-icon">
-              <div className="golden-circle">
-                <div className="circle-pattern"></div>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center relative">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-gold-dark relative">
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-black"></div>
               </div>
             </div>
-            <div className="logo-text">
-              <span className="logo-woman">WOMAN</span>
-              <span className="logo-business">BUSINESS CIRCLE</span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-black text-3xl font-bold tracking-wider">WOMAN</span>
+              <span className="text-gold text-2xl font-bold tracking-wide">BUSINESS CIRCLE</span>
             </div>
           </div>
 
           {/* Form Section */}
-          <div className="form-section">
-            <div className="form-tabs">
+          <div className="mb-6">
+            <div className="flex border-b-2 border-gray-200 mb-6">
               <button 
-                className={`tab-button ${isLogin ? 'active' : ''}`}
+                className={`flex-1 py-4 font-bold text-lg transition-all duration-300 relative ${
+                  isLogin 
+                    ? 'text-gold border-b-2 border-gold' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
                 onClick={() => setIsLogin(true)}
               >
                 Login
               </button>
               <button 
-                className={`tab-button ${!isLogin ? 'active' : ''}`}
+                className={`flex-1 py-4 font-bold text-lg transition-all duration-300 relative ${
+                  !isLogin 
+                    ? 'text-gold border-b-2 border-gold' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
                 onClick={() => setIsLogin(false)}
               >
                 Sign Up
               </button>
             </div>
 
-            <form className="auth-form" onSubmit={handleSubmit}>
-              <h2>{isLogin ? 'Welcome Back' : 'Join Our Community'}</h2>
-              <p className="form-subtitle">
-                {isLogin 
-                  ? 'Sign in to your account to continue' 
-                  : 'Create your account to get started'
-                }
-              </p>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                  {isLogin ? 'Welcome Back' : 'Join Our Community'}
+                </h2>
+                <p className="text-gray-600">
+                  {isLogin 
+                    ? 'Sign in to your account to continue' 
+                    : 'Create your account to get started'
+                  }
+                </p>
+              </div>
 
               {!isLogin && (
-                <div className="form-group">
-                  <label htmlFor="name">Full Name</label>
+                <div>
+                  <label htmlFor="name" className="form-label">Full Name</label>
                   <input
                     type="text"
                     id="name"
@@ -129,39 +140,50 @@ const Login = () => {
                     onChange={handleChange}
                     required
                     placeholder="Enter your full name"
+                    className="form-input"
                   />
                 </div>
               )}
 
               {!isLogin && (
-                <div className="form-group">
-                  <label htmlFor="role">I want to:</label>
-                  <div className="role-selection">
-                    <label className="role-option">
+                <div>
+                  <label className="form-label">I want to:</label>
+                  <div className="flex gap-4 mt-2">
+                    <label className="flex-1 cursor-pointer">
                       <input
                         type="radio"
                         name="role"
                         value="buyer"
                         checked={formData.role === 'buyer'}
                         onChange={handleChange}
+                        className="sr-only"
                       />
-                      <span className="role-label">
-                        <span className="role-icon">🛒</span>
-                        Buy Food Items
-                      </span>
+                      <div className={`flex flex-col items-center p-4 border-2 rounded-lg transition-all duration-300 ${
+                        formData.role === 'buyer' 
+                          ? 'border-gold bg-yellow-50 shadow-lg transform -translate-y-1' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}>
+                        <span className="text-2xl mb-2">🛒</span>
+                        <span className="font-bold text-gray-700">Buy  Items</span>
+                      </div>
                     </label>
-                    <label className="role-option">
+                    <label className="flex-1 cursor-pointer">
                       <input
                         type="radio"
                         name="role"
                         value="seller"
                         checked={formData.role === 'seller'}
                         onChange={handleChange}
+                        className="sr-only"
                       />
-                      <span className="role-label">
-                        <span className="role-icon">🍽️</span>
-                        Sell Food Items
-                      </span>
+                      <div className={`flex flex-col items-center p-4 border-2 rounded-lg transition-all duration-300 ${
+                        formData.role === 'seller' 
+                          ? 'border-gold bg-yellow-50 shadow-lg transform -translate-y-1' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}>
+                        <span className="text-2xl mb-2">🍽️</span>
+                        <span className="font-bold text-gray-700">Sell  Items</span>
+                      </div>
                     </label>
                   </div>
                 </div>
@@ -169,8 +191,8 @@ const Login = () => {
 
               {!isLogin && formData.role === 'seller' && (
                 <>
-                  <div className="form-group">
-                    <label htmlFor="businessName">Business Name *</label>
+                  <div>
+                    <label htmlFor="businessName" className="form-label">Business Name *</label>
                     <input
                       type="text"
                       id="businessName"
@@ -179,10 +201,11 @@ const Login = () => {
                       onChange={handleChange}
                       required
                       placeholder="Enter your business name"
+                      className="form-input"
                     />
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="businessDescription">Business Description</label>
+                  <div>
+                    <label htmlFor="businessDescription" className="form-label">Business Description</label>
                     <textarea
                       id="businessDescription"
                       name="businessDescription"
@@ -190,14 +213,15 @@ const Login = () => {
                       onChange={handleChange}
                       placeholder="Tell us about your business..."
                       rows="3"
+                      className="form-input resize-none"
                     />
                   </div>
                 </>
               )}
 
               {!isLogin && (
-                <div className="form-group">
-                  <label htmlFor="phone">Phone Number</label>
+                <div>
+                  <label htmlFor="phone" className="form-label">Phone Number</label>
                   <input
                     type="tel"
                     id="phone"
@@ -205,12 +229,13 @@ const Login = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Enter your phone number"
+                    className="form-input"
                   />
                 </div>
               )}
 
-              <div className="form-group">
-                <label htmlFor="email">Email Address</label>
+              <div>
+                <label htmlFor="email" className="form-label">Email Address</label>
                 <input
                   type="email"
                   id="email"
@@ -219,11 +244,12 @@ const Login = () => {
                   onChange={handleChange}
                   required
                   placeholder="Enter your email address"
+                  className="form-input"
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="password">Password</label>
+              <div>
+                <label htmlFor="password" className="form-label">Password</label>
                 <input
                   type="password"
                   id="password"
@@ -232,12 +258,13 @@ const Login = () => {
                   onChange={handleChange}
                   required
                   placeholder="Enter your password"
+                  className="form-input"
                 />
               </div>
 
               {!isLogin && (
-                <div className="form-group">
-                  <label htmlFor="confirmPassword">Confirm Password</label>
+                <div>
+                  <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
                   <input
                     type="password"
                     id="confirmPassword"
@@ -246,88 +273,58 @@ const Login = () => {
                     onChange={handleChange}
                     required
                     placeholder="Confirm your password"
+                    className="form-input"
                   />
                 </div>
               )}
 
               {isLogin && (
-                <div className="form-options">
-                  <label className="checkbox-label">
-                    <input type="checkbox" />
-                    <span className="checkmark"></span>
-                    Remember me
+                <div className="flex justify-between items-center">
+                  <label className="flex items-center cursor-pointer">
+                    <input type="checkbox" className="mr-2 accent-gold" />
+                    <span className="text-gray-600">Remember me</span>
                   </label>
-                  <Link to="/forgot-password" className="forgot-link">
+                  <Link to="/forgot-password" className="text-gold font-bold hover:underline">
                     Forgot Password?
                   </Link>
                 </div>
               )}
 
-              <button type="submit" className="submit-button">
+              <button type="submit" className="btn btn-primary w-full py-3 text-lg">
                 {isLogin ? 'Sign In' : 'Create Account'}
               </button>
 
               {!isLogin && (
-                <div className="terms">
+                <div className="text-center text-sm text-gray-600">
                   <p>
                     By creating an account, you agree to our{' '}
-                    <Link to="/terms" className="terms-link">Terms of Service</Link>
+                    <Link to="/terms" className="text-gold font-bold hover:underline">Terms of Service</Link>
                     {' '}and{' '}
-                    <Link to="/privacy" className="terms-link">Privacy Policy</Link>
+                    <Link to="/privacy" className="text-gold font-bold hover:underline">Privacy Policy</Link>
                   </p>
                 </div>
               )}
             </form>
 
             {/* Social Login */}
-            <div className="social-login">
-              <div className="divider">
-                <span>Or continue with</span>
+            <div className="mt-8">
+              <div className="relative text-center mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative bg-white px-4">
+                  <span className="text-gray-500 text-sm">Or continue with</span>
+                </div>
               </div>
-              <div className="social-buttons">
-                <button className="social-btn google">
-                  <span className="social-icon">G</span>
+              <div className="flex gap-4">
+                <button className="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-gray-300 rounded-lg hover:border-gold transition-all duration-300 font-bold">
+                  <span className="w-5 h-5 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center">G</span>
                   Google
                 </button>
-                <button className="social-btn linkedin">
-                  <span className="social-icon">in</span>
+                <button className="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-gray-300 rounded-lg hover:border-gold transition-all duration-300 font-bold">
+                  <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">in</span>
                   LinkedIn
                 </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Benefits Section */}
-        <div className="benefits-section">
-          <h3>Join Our Food Marketplace</h3>
-          <div className="benefits-list">
-            <div className="benefit-item">
-              <div className="benefit-icon">🛒</div>
-              <div className="benefit-text">
-                <h4>For Buyers</h4>
-                <p>Discover amazing food from local women entrepreneurs</p>
-              </div>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">🍽️</div>
-              <div className="benefit-text">
-                <h4>For Sellers</h4>
-                <p>Showcase your culinary creations and grow your business</p>
-              </div>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">⭐</div>
-              <div className="benefit-text">
-                <h4>Quality</h4>
-                <p>All food items are reviewed and rated by our community</p>
-              </div>
-            </div>
-            <div className="benefit-item">
-              <div className="benefit-icon">🤝</div>
-              <div className="benefit-text">
-                <h4>Community</h4>
-                <p>Support women entrepreneurs in the food industry</p>
               </div>
             </div>
           </div>

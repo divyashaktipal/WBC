@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import './Dashboard.css'
 
 const SellerDashboard = () => {
   const navigate = useNavigate()

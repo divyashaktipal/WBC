@@ -13,7 +13,7 @@ const { protect, isSeller, isBuyer } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Validation rules for creating/updating food items
+// Simplified validation rules for creating/updating food items
 const foodItemValidation = [
   body('name')
     .trim()
@@ -27,54 +27,9 @@ const foodItemValidation = [
     .isFloat({ min: 0 })
     .withMessage('Price must be a positive number'),
   body('category')
-    .isIn([
-      'appetizers',
-      'main-courses',
-      'desserts',
-      'beverages',
-      'snacks',
-      'salads',
-      'soups',
-      'breakfast',
-      'lunch',
-      'dinner',
-      'vegetarian',
-      'vegan',
-      'gluten-free',
-      'dairy-free',
-      'other'
-    ])
-    .withMessage('Invalid category'),
-  body('images')
-    .isArray({ min: 1 })
-    .withMessage('At least one image is required'),
-  body('preparationTime')
-    .isInt({ min: 1 })
-    .withMessage('Preparation time must be a positive integer (in minutes)'),
-  body('isHomemade')
-    .optional()
-    .isBoolean()
-    .withMessage('isHomemade must be a boolean'),
-  body('homemadeDetails.preparationMethod')
-    .optional()
-    .isIn(['handmade', 'home-cooked', 'artisan', 'traditional-recipe', 'family-recipe'])
-    .withMessage('Invalid preparation method'),
-  body('homemadeDetails.ingredientsSource')
-    .optional()
-    .isIn(['fresh-local', 'organic', 'homegrown', 'traditional', 'premium-quality'])
-    .withMessage('Invalid ingredients source'),
-  body('homemadeDetails.preparationTime')
-    .optional()
-    .isIn(['same-day', '24-hours', '2-3-days', 'weekly-batch'])
-    .withMessage('Invalid preparation time'),
-  body('availability.quantity')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Quantity must be a non-negative integer'),
-  body('availability.maxOrderQuantity')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Max order quantity must be a positive integer')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Category must be between 2 and 50 characters')
 ];
 
 // Validation rules for reviews

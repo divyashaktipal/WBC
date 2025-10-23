@@ -15,27 +15,23 @@ const foodItemSchema = new mongoose.Schema({
   homemadeDetails: {
     preparationMethod: {
       type: String,
-      required: function() {
-        return this.isHomemade === true;
-      },
-      enum: ['handmade', 'home-cooked', 'artisan', 'traditional-recipe', 'family-recipe'],
-      default: 'home-cooked'
+      default: 'home-cooked-vegetarian'
     },
     ingredientsSource: {
       type: String,
-      required: function() {
-        return this.isHomemade === true;
-      },
-      enum: ['fresh-local', 'organic', 'homegrown', 'traditional', 'premium-quality'],
-      default: 'fresh-local'
+      default: 'fresh-local-vegetables'
     },
     preparationTime: {
       type: String,
-      required: function() {
-        return this.isHomemade === true;
-      },
-      enum: ['same-day', '24-hours', '2-3-days', 'weekly-batch'],
-      default: 'same-day'
+      default: 'same-day-vegetarian'
+    },
+    vegetarianCookingTechnique: {
+      type: String,
+      default: 'traditional-vegetarian-cooking'
+    },
+    spiceLevel: {
+      type: String,
+      default: 'medium-vegetarian'
     }
   },
   description: {
@@ -50,24 +46,7 @@ const foodItemSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: [true, 'Category is required'],
-    enum: [
-      'appetizers',
-      'main-courses',
-      'desserts',
-      'beverages',
-      'snacks',
-      'salads',
-      'soups',
-      'breakfast',
-      'lunch',
-      'dinner',
-      'vegetarian',
-      'vegan',
-      'gluten-free',
-      'dairy-free',
-      'other'
-    ]
+    required: [true, 'Category is required']
   },
   images: [{
     type: String,
@@ -78,23 +57,13 @@ const foodItemSchema = new mongoose.Schema({
     trim: true
   }],
   allergens: [{
-    type: String,
-    enum: [
-      'nuts',
-      'dairy',
-      'eggs',
-      'soy',
-      'wheat',
-      'fish',
-      'shellfish',
-      'sesame',
-      'none'
-    ]
+    type: String
   }],
   dietaryInfo: {
     isVegetarian: {
       type: Boolean,
-      default: false
+      default: true,
+      required: [true, 'All items must be vegetarian']
     },
     isVegan: {
       type: Boolean,
@@ -115,6 +84,14 @@ const foodItemSchema = new mongoose.Schema({
     isKosher: {
       type: Boolean,
       default: false
+    },
+    vegetarianType: {
+      type: String,
+      default: 'pure-vegetarian'
+    },
+    cookingStyle: {
+      type: String,
+      default: 'traditional-vegetarian'
     }
   },
   nutritionInfo: {
@@ -193,7 +170,7 @@ const foodItemSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Pre-save middleware to enforce homemade items only
+// Pre-save middleware to enforce vegetarian homemade items only
 foodItemSchema.pre('save', function(next) {
   // Ensure all items are homemade
   if (this.isHomemade === false) {
@@ -205,6 +182,16 @@ foodItemSchema.pre('save', function(next) {
     this.isHomemade = true;
   }
   
+  // Ensure all items are vegetarian
+  if (this.dietaryInfo && this.dietaryInfo.isVegetarian === false) {
+    return next(new Error('Only vegetarian items are allowed on this platform'));
+  }
+  
+  // Set isVegetarian to true if not explicitly set
+  if (this.dietaryInfo && (this.dietaryInfo.isVegetarian === undefined || this.dietaryInfo.isVegetarian === null)) {
+    this.dietaryInfo.isVegetarian = true;
+  }
+  
   next();
 });
 
@@ -214,5 +201,8 @@ foodItemSchema.index({ seller: 1 });
 foodItemSchema.index({ category: 1 });
 foodItemSchema.index({ 'rating.average': -1 });
 foodItemSchema.index({ isHomemade: 1 });
+foodItemSchema.index({ 'dietaryInfo.isVegetarian': 1 });
+foodItemSchema.index({ 'dietaryInfo.vegetarianType': 1 });
+foodItemSchema.index({ 'dietaryInfo.cookingStyle': 1 });
 
 module.exports = mongoose.model('FoodItem', foodItemSchema);
