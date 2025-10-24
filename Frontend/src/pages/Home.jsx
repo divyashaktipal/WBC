@@ -131,7 +131,7 @@ const Home = () => {
       </section>
 
       {/* Trusted Companies Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-gray-50 mt-10">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="text-center text-xl md:text-2xl text-gray-600 mb-8 md:mb-12">
             TRUSTED BY OVER 1K+ SELLERS
@@ -169,7 +169,7 @@ const Home = () => {
       </section>
 
       {/* Browse The Range Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 ">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -227,7 +227,7 @@ const Home = () => {
       </section>
 
       {/* Our Products Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 mt-0 bg-amber-50">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
             Our Products
