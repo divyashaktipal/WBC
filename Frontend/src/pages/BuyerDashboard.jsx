@@ -1,45 +1,49 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const BuyerDashboard = () => {
-  const navigate = useNavigate()
-  const { user, isAuthenticated, isBuyer } = useAuth()
-  
-  const [featuredFoodItems, setFeaturedFoodItems] = useState([])
-  const [topSellers, setTopSellers] = useState([])
-  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate();
+  const { user, isAuthenticated, isBuyer } = useAuth();
+
+  const [featuredFoodItems, setFeaturedFoodItems] = useState([]);
+  const [topSellers, setTopSellers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isAuthenticated() || !isBuyer()) {
-      navigate('/login')
-      return
+      navigate("/login");
+      return;
     }
 
-    fetchDashboardData()
-  }, [navigate, isAuthenticated, isBuyer])
+    fetchDashboardData();
+  }, [navigate, isAuthenticated, isBuyer]);
 
   const fetchDashboardData = async () => {
     try {
       // Fetch featured food items
-      const foodResponse = await fetch('http://localhost:5000/api/food-items?limit=6&sortBy=rating.average&sortOrder=desc')
+      const foodResponse = await fetch(
+        "http://localhost:5000/api/food-items?limit=6&sortBy=rating.average&sortOrder=desc"
+      );
       if (foodResponse.ok) {
-        const foodData = await foodResponse.json()
-        setFeaturedFoodItems(foodData.data)
+        const foodData = await foodResponse.json();
+        setFeaturedFoodItems(foodData.data);
       }
 
       // Fetch top sellers
-      const sellersResponse = await fetch('http://localhost:5000/api/users/sellers?limit=4')
+      const sellersResponse = await fetch(
+        "http://localhost:5000/api/users/sellers?limit=4"
+      );
       if (sellersResponse.ok) {
-        const sellersData = await sellersResponse.json()
-        setTopSellers(sellersData.data)
+        const sellersData = await sellersResponse.json();
+        setTopSellers(sellersData.data);
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error)
+      console.error("Error fetching dashboard data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -48,7 +52,7 @@ const BuyerDashboard = () => {
           <div className="loading">Loading...</div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -73,7 +77,11 @@ const BuyerDashboard = () => {
             <div className="notice-icon">🏠</div>
             <div className="notice-text">
               <h3>100% Homemade Items</h3>
-              <p>All food items on our platform are homemade by talented women entrepreneurs. Each item is prepared with love in home kitchens using fresh, quality ingredients.</p>
+              <p>
+                All food items on our platform are homemade by talented women
+                entrepreneurs. Each item is prepared with love in home kitchens
+                using fresh, quality ingredients.
+              </p>
             </div>
           </div>
         </div>
@@ -81,8 +89,8 @@ const BuyerDashboard = () => {
         {/* Search Bar */}
         <div className="search-section">
           <div className="search-bar">
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search for food items, sellers, or categories..."
               className="search-input"
             />
@@ -115,7 +123,7 @@ const BuyerDashboard = () => {
               View All
             </Link>
           </div>
-          
+
           {featuredFoodItems.length > 0 ? (
             <div className="food-items-grid">
               {featuredFoodItems.map((item) => (
@@ -132,18 +140,25 @@ const BuyerDashboard = () => {
                     <h3>{item.name}</h3>
                     <p className="food-item-description">{item.description}</p>
                     <p className="food-item-price">${item.price}</p>
-                    <p className="food-item-seller">by {item.seller?.businessName || item.seller?.name}</p>
+                    <p className="food-item-seller">
+                      by {item.seller?.businessName || item.seller?.name}
+                    </p>
                     <div className="food-item-rating">
-                      <span className="rating">⭐ {item.rating.average.toFixed(1)}</span>
-                      <span className="reviews">({item.rating.count} reviews)</span>
+                      <span className="rating">
+                        ⭐ {item.rating.average.toFixed(1)}
+                      </span>
+                      <span className="reviews">
+                        ({item.rating.count} reviews)
+                      </span>
                     </div>
                     <div className="food-item-actions">
-                      <Link to={`/food-item/${item._id}`} className="btn btn-primary">
+                      <Link
+                        to={`/food-item/${item._id}`}
+                        className="btn btn-primary"
+                      >
                         View Details
                       </Link>
-                      <button className="btn btn-secondary">
-                        Add to Cart
-                      </button>
+                      <button className="btn btn-secondary">Add to Cart</button>
                     </div>
                   </div>
                 </div>
@@ -166,7 +181,7 @@ const BuyerDashboard = () => {
               View All Sellers
             </Link>
           </div>
-          
+
           {topSellers.length > 0 ? (
             <div className="sellers-grid">
               {topSellers.map((seller) => (
@@ -182,10 +197,15 @@ const BuyerDashboard = () => {
                     <h3>{seller.businessName || seller.name}</h3>
                     <p className="seller-name">by {seller.name}</p>
                     {seller.businessDescription && (
-                      <p className="seller-description">{seller.businessDescription}</p>
+                      <p className="seller-description">
+                        {seller.businessDescription}
+                      </p>
                     )}
                     <div className="seller-actions">
-                      <Link to={`/seller/${seller._id}`} className="btn btn-primary">
+                      <Link
+                        to={`/seller/${seller._id}`}
+                        className="btn btn-primary"
+                      >
                         View Profile
                       </Link>
                     </div>
@@ -230,7 +250,7 @@ const BuyerDashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BuyerDashboard
+export default BuyerDashboard;

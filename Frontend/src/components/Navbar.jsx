@@ -88,7 +88,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link
-                  to="/seller-dashboard"
+                  to="/become-seller"
                   className="border-2 border-gold text-gold px-4 py-2 rounded-md hover:bg-gold hover:text-black transition-colors"
                 >
                   Become a Seller
@@ -141,7 +141,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link
-                  to="/seller-dashboard"
+                  to="/become-seller"
                   className="border-2 border-gold text-gold px-4 py-2 rounded-md hover:bg-gold hover:text-black transition-colors text-center"
                 >
                   Become a Seller

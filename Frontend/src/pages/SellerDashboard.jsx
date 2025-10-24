@@ -1,48 +1,51 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const SellerDashboard = () => {
-  const navigate = useNavigate()
-  const { user, token, isAuthenticated, isSeller } = useAuth()
-  
+  const navigate = useNavigate();
+  const { user, token, isAuthenticated, isSeller } = useAuth();
+
   const [stats, setStats] = useState({
     totalFoodItems: 0,
     availableFoodItems: 0,
     averageRating: 0,
-    totalReviews: 0
-  })
-  const [foodItems, setFoodItems] = useState([])
-  const [loading, setLoading] = useState(true)
+    totalReviews: 0,
+  });
+  const [foodItems, setFoodItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isAuthenticated() || !isSeller()) {
-      navigate('/login')
-      return
+      navigate("/login");
+      return;
     }
 
-    fetchDashboardData(token)
-  }, [navigate, isAuthenticated, isSeller, token])
+    fetchDashboardData(token);
+  }, [navigate, isAuthenticated, isSeller, token]);
 
   const fetchDashboardData = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/api/users/seller-dashboard', {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      const response = await fetch(
+        "http://localhost:5000/api/users/seller-dashboard",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      })
+      );
 
       if (response.ok) {
-        const data = await response.json()
-        setStats(data.data.stats)
-        setFoodItems(data.data.recentFoodItems)
+        const data = await response.json();
+        setStats(data.data.stats);
+        setFoodItems(data.data.recentFoodItems);
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error)
+      console.error("Error fetching dashboard data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -51,7 +54,7 @@ const SellerDashboard = () => {
           <div className="loading">Loading...</div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -76,7 +79,11 @@ const SellerDashboard = () => {
             <div className="notice-icon">🏠</div>
             <div className="notice-text">
               <h3>Homemade Items Only</h3>
-              <p>Remember: This platform is exclusively for homemade food items. All items must be prepared in your home kitchen using fresh ingredients and traditional recipes.</p>
+              <p>
+                Remember: This platform is exclusively for homemade food items.
+                All items must be prepared in your home kitchen using fresh
+                ingredients and traditional recipes.
+              </p>
             </div>
           </div>
         </div>
@@ -121,7 +128,7 @@ const SellerDashboard = () => {
               View All
             </Link>
           </div>
-          
+
           {foodItems.length > 0 ? (
             <div className="food-items-grid">
               {foodItems.map((item) => (
@@ -138,11 +145,18 @@ const SellerDashboard = () => {
                     <p className="food-item-price">${item.price}</p>
                     <p className="food-item-category">{item.category}</p>
                     <div className="food-item-rating">
-                      <span className="rating">⭐ {item.rating.average.toFixed(1)}</span>
-                      <span className="reviews">({item.rating.count} reviews)</span>
+                      <span className="rating">
+                        ⭐ {item.rating.average.toFixed(1)}
+                      </span>
+                      <span className="reviews">
+                        ({item.rating.count} reviews)
+                      </span>
                     </div>
                     <div className="food-item-actions">
-                      <Link to={`/edit-food-item/${item._id}`} className="btn btn-small">
+                      <Link
+                        to={`/edit-food-item/${item._id}`}
+                        className="btn btn-small"
+                      >
                         Edit
                       </Link>
                       <button className="btn btn-small btn-danger">
@@ -193,7 +207,7 @@ const SellerDashboard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SellerDashboard
+export default SellerDashboard;

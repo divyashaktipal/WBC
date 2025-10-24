@@ -1,78 +1,78 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
-  const navigate = useNavigate()
-  const { login, isAuthenticated } = useAuth()
-  
+  const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'buyer',
-    phone: '',
-    businessName: '',
-    businessDescription: ''
-  })
-  const [isLogin, setIsLogin] = useState(true)
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "buyer",
+    phone: "",
+    businessName: "",
+    businessDescription: "",
+  });
+  const [isLogin, setIsLogin] = useState(true);
 
   // Redirect if already authenticated
   if (isAuthenticated()) {
-    navigate('/')
-    return null
+    navigate("/");
+    return null;
   }
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!isLogin && formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!')
-      return
+      alert("Passwords do not match!");
+      return;
     }
 
     try {
-      const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
-      const payload = isLogin 
+      const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
+      const payload = isLogin
         ? { email: formData.email, password: formData.password }
-        : formData
+        : formData;
 
       const response = await fetch(`http://localhost:5000${endpoint}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
-      })
+        body: JSON.stringify(payload),
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
         // Use the auth context to handle login
-        login(data.user, data.token)
-        
+        login(data.user, data.token);
+
         // Redirect based on user role
-        if (data.user.role === 'seller') {
-          navigate('/seller-dashboard')
+        if (data.user.role === "seller") {
+          navigate("/seller-dashboard");
         } else {
-          navigate('/buyer-dashboard')
+          navigate("/buyer-dashboard");
         }
       } else {
-        alert(data.message || 'An error occurred')
+        alert(data.message || "An error occurred");
       }
     } catch (error) {
-      console.error('Auth error:', error)
-      alert('An error occurred. Please try again.')
+      console.error("Auth error:", error);
+      alert("An error occurred. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center py-8 px-4">
@@ -86,29 +86,33 @@ const Login = () => {
               </div>
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-black text-3xl font-bold tracking-wider">WOMAN</span>
-              <span className="text-gold text-2xl font-bold tracking-wide">BUSINESS CIRCLE</span>
+              <span className="text-black text-3xl font-bold tracking-wider">
+                WOMAN
+              </span>
+              <span className="text-gold text-2xl font-bold tracking-wide">
+                BUSINESS CIRCLE
+              </span>
             </div>
           </div>
 
           {/* Form Section */}
           <div className="mb-6">
             <div className="flex border-b-2 border-gray-200 mb-6">
-              <button 
+              <button
                 className={`flex-1 py-4 font-bold text-lg transition-all duration-300 relative ${
-                  isLogin 
-                    ? 'text-gold border-b-2 border-gold' 
-                    : 'text-gray-500 hover:text-gray-700'
+                  isLogin
+                    ? "text-gold border-b-2 border-gold"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setIsLogin(true)}
               >
                 Login
               </button>
-              <button 
+              <button
                 className={`flex-1 py-4 font-bold text-lg transition-all duration-300 relative ${
-                  !isLogin 
-                    ? 'text-gold border-b-2 border-gold' 
-                    : 'text-gray-500 hover:text-gray-700'
+                  !isLogin
+                    ? "text-gold border-b-2 border-gold"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
                 onClick={() => setIsLogin(false)}
               >
@@ -119,19 +123,20 @@ const Login = () => {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="text-center">
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                  {isLogin ? 'Welcome Back' : 'Join Our Community'}
+                  {isLogin ? "Welcome Back" : "Join Our Community"}
                 </h2>
                 <p className="text-gray-600">
-                  {isLogin 
-                    ? 'Sign in to your account to continue' 
-                    : 'Create your account to get started'
-                  }
+                  {isLogin
+                    ? "Sign in to your account to continue"
+                    : "Create your account to get started"}
                 </p>
               </div>
 
               {!isLogin && (
                 <div>
-                  <label htmlFor="name" className="form-label">Full Name</label>
+                  <label htmlFor="name" className="form-label">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     id="name"
@@ -147,81 +152,9 @@ const Login = () => {
 
               {!isLogin && (
                 <div>
-                  <label className="form-label">I want to:</label>
-                  <div className="flex gap-4 mt-2">
-                    <label className="flex-1 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="buyer"
-                        checked={formData.role === 'buyer'}
-                        onChange={handleChange}
-                        className="sr-only"
-                      />
-                      <div className={`flex flex-col items-center p-4 border-2 rounded-lg transition-all duration-300 ${
-                        formData.role === 'buyer' 
-                          ? 'border-gold bg-yellow-50 shadow-lg transform -translate-y-1' 
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}>
-                        <span className="text-2xl mb-2">🛒</span>
-                        <span className="font-bold text-gray-700">Buy  Items</span>
-                      </div>
-                    </label>
-                    <label className="flex-1 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="role"
-                        value="seller"
-                        checked={formData.role === 'seller'}
-                        onChange={handleChange}
-                        className="sr-only"
-                      />
-                      <div className={`flex flex-col items-center p-4 border-2 rounded-lg transition-all duration-300 ${
-                        formData.role === 'seller' 
-                          ? 'border-gold bg-yellow-50 shadow-lg transform -translate-y-1' 
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}>
-                        <span className="text-2xl mb-2">🍽️</span>
-                        <span className="font-bold text-gray-700">Sell  Items</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {!isLogin && formData.role === 'seller' && (
-                <>
-                  <div>
-                    <label htmlFor="businessName" className="form-label">Business Name *</label>
-                    <input
-                      type="text"
-                      id="businessName"
-                      name="businessName"
-                      value={formData.businessName}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter your business name"
-                      className="form-input"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="businessDescription" className="form-label">Business Description</label>
-                    <textarea
-                      id="businessDescription"
-                      name="businessDescription"
-                      value={formData.businessDescription}
-                      onChange={handleChange}
-                      placeholder="Tell us about your business..."
-                      rows="3"
-                      className="form-input resize-none"
-                    />
-                  </div>
-                </>
-              )}
-
-              {!isLogin && (
-                <div>
-                  <label htmlFor="phone" className="form-label">Phone Number</label>
+                  <label htmlFor="phone" className="form-label">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     id="phone"
@@ -235,7 +168,9 @@ const Login = () => {
               )}
 
               <div>
-                <label htmlFor="email" className="form-label">Email Address</label>
+                <label htmlFor="email" className="form-label">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   id="email"
@@ -249,7 +184,9 @@ const Login = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="form-label">Password</label>
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
                 <input
                   type="password"
                   id="password"
@@ -264,7 +201,9 @@ const Login = () => {
 
               {!isLogin && (
                 <div>
-                  <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+                  <label htmlFor="confirmPassword" className="form-label">
+                    Confirm Password
+                  </label>
                   <input
                     type="password"
                     id="confirmPassword"
@@ -284,23 +223,39 @@ const Login = () => {
                     <input type="checkbox" className="mr-2 accent-gold" />
                     <span className="text-gray-600">Remember me</span>
                   </label>
-                  <Link to="/forgot-password" className="text-gold font-bold hover:underline">
+                  <Link
+                    to="/forgot-password"
+                    className="text-gold font-bold hover:underline"
+                  >
                     Forgot Password?
                   </Link>
                 </div>
               )}
 
-              <button type="submit" className="btn btn-primary w-full py-3 text-lg">
-                {isLogin ? 'Sign In' : 'Create Account'}
+              <button
+                type="submit"
+                className="btn btn-primary w-full py-3 text-lg"
+              >
+                {isLogin ? "Sign In" : "Create Account"}
               </button>
 
               {!isLogin && (
                 <div className="text-center text-sm text-gray-600">
                   <p>
-                    By creating an account, you agree to our{' '}
-                    <Link to="/terms" className="text-gold font-bold hover:underline">Terms of Service</Link>
-                    {' '}and{' '}
-                    <Link to="/privacy" className="text-gold font-bold hover:underline">Privacy Policy</Link>
+                    By creating an account, you agree to our{" "}
+                    <Link
+                      to="/terms"
+                      className="text-gold font-bold hover:underline"
+                    >
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link
+                      to="/privacy"
+                      className="text-gold font-bold hover:underline"
+                    >
+                      Privacy Policy
+                    </Link>
                   </p>
                 </div>
               )}
@@ -313,16 +268,22 @@ const Login = () => {
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative bg-white px-4">
-                  <span className="text-gray-500 text-sm">Or continue with</span>
+                  <span className="text-gray-500 text-sm">
+                    Or continue with
+                  </span>
                 </div>
               </div>
               <div className="flex gap-4">
                 <button className="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-gray-300 rounded-lg hover:border-gold transition-all duration-300 font-bold">
-                  <span className="w-5 h-5 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center">G</span>
+                  <span className="w-5 h-5 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center">
+                    G
+                  </span>
                   Google
                 </button>
                 <button className="flex-1 flex items-center justify-center gap-2 p-3 border-2 border-gray-300 rounded-lg hover:border-gold transition-all duration-300 font-bold">
-                  <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">in</span>
+                  <span className="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center">
+                    in
+                  </span>
                   LinkedIn
                 </button>
               </div>
@@ -331,7 +292,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
